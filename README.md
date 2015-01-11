@@ -1,4 +1,4 @@
 # Natural-Language-Programming
 
-Add some usual NLP model or related model here, such as topic model, Vector Space Model(VSM), LSA, LDA, etc.
-Main language will be python, using severl package such as gensim, NLTK, jieba, OpenNLP, etc.
+Some usual NLP model and related model here, such as topic model, Vector Space Model(VSM), LSA, LDA, etc.
+Main language will be python, java will also included, using several package such as gensim, NLTK, jieba, OpenNLP, etc.
