@@ -64,6 +64,7 @@ dictionary.save('/Users/JimberXin/Documents/Github Workingspace/'
 print dictionary
 Dictionary(12 unique tokens: [u'minors', u'graph', u'system', u'trees', u'eps']...)
 
+# print dictionary.token2id
 for item in dictionary.items():
     print item
 (11, u'minors')
@@ -93,7 +94,7 @@ The sparse vector [(0, 1), (1, 1)] therefore reads: in the document 'Human compu
 the words computer (id 0) and human (id 1) appear once; the other ten dictionary words appear
 (implicitly) zero times.
 """
-corpus = [dictionary.doc2bow(text) for text in texts]
+corpus = [dictionary.doc2bow(text) for text in texts]  # return a [tokenID, tokenCounts] 2-tuples
 """
 # store the corpus of MM format in the disk, for later use
 corpora.MmCorpus.serialize('/Users/JimberXin/Documents/Github Workingspace/'
@@ -110,4 +111,47 @@ for each_corpus in corpus:
 [(9, 1), (10, 1), (11, 1)]
 [(4, 1), (10, 1), (11, 1)]
 """
-print corpus
+
+
+"""============================Corpus Streaming -- One Document at a time========================"""
+class MyCorpus(object):
+    def __iter__(self):
+        for line in open('mycorpus.txt'):
+            yield dictionary.doc2bow(line.lower().split())
+
+corpus_memory_friendly = MyCorpus()  # doesn't load the corpus into memory!
+"""
+print corpus_memory_friendly
+<__main__.MyCorpus object at 0x105026a90>
+
+for vector in corpus_memory_friendly:
+    print vector
+[(0, 1), (1, 1), (2, 1)]
+[(0, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1)]
+[(2, 1), (5, 1), (7, 1), (8, 1)]
+[(1, 1), (5, 2), (8, 1)]
+[(3, 1), (6, 1), (7, 1)]
+[(9, 1)]
+[(9, 1), (10, 1)]
+[(9, 1), (10, 1), (11, 1)]
+[(4, 1), (10, 1), (11, 1)]
+Although the output is the same as for the plain Python list, the corpus is now much more memory friendly,
+because at most one vector resides in RAM at a time. Corpus can now be as large as you want.
+"""
+
+# Similarly, to construct the dictionary without loading all texts into memory
+# collect statics about all tokens
+dictionary_memory_friendly = corpora.Dictionary(line.lower().split() for line in open('mycorpus.txt'))
+# remove stop words and words that appear only once
+stop_ids = [dictionary_memory_friendly.token2id[stopword] for stopword in stoplist
+            if stopword in dictionary_memory_friendly.token2id]
+once_ids = [tokenid for tokenid, docfreq in dictionary_memory_friendly.dfs.iteritems() if docfreq==1]
+dictionary_memory_friendly.filter_tokens(stop_ids+once_ids)  # remove stop words and words that appear only once
+dictionary_memory_friendly.compactify()  # remove gaps in id sequence after words that were removed
+"""
+print dictionary_memory_friendly
+"""
+
+temp = corpora.MmCorpus('/Users/JimberXin/Documents/Github Workingspace '
+                        'Natural-Language-Programming/Gensim/FirstDict.dict')
+print type(temp)
