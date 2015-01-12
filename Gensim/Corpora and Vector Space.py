@@ -27,6 +27,7 @@ documents = ["Human machine interface for lab abc computer applications",
              "Graph minors IV Widths of trees and well quasi ordering",
              "Graph minors A survey"]
 
+
 # tokenize the documents, remove common words(using a stoplist) and word appear once
 # remove common words and tokenize
 stoplist = set('for a of the and to in'.split())
@@ -56,11 +57,13 @@ for text in texts:
 # Use bag-of-words to convert documents to vectors
 # In this document, each document is represented by one vector by (word, frequency)
 dictionary = corpora.Dictionary(texts)
-"""
+
+
+
 # store in the disk
 dictionary.save('/Users/JimberXin/Documents/Github Workingspace/'
                 'Natural-Language-Programming/Gensim/FirstDict.dict')
-
+"""
 print dictionary
 Dictionary(12 unique tokens: [u'minors', u'graph', u'system', u'trees', u'eps']...)
 
@@ -95,10 +98,11 @@ the words computer (id 0) and human (id 1) appear once; the other ten dictionary
 (implicitly) zero times.
 """
 corpus = [dictionary.doc2bow(text) for text in texts]  # return a [tokenID, tokenCounts] 2-tuples
-"""
+
 # store the corpus of MM format in the disk, for later use
 corpora.MmCorpus.serialize('/Users/JimberXin/Documents/Github Workingspace/'
                            'Natural-Language-Programming/Gensim/FirstCorpus.mm', corpus)
+"""
 for each_corpus in corpus:
     print each_corpus
 [(0, 1), (1, 1), (2, 1)]
@@ -152,6 +156,7 @@ dictionary_memory_friendly.compactify()  # remove gaps in id sequence after word
 print dictionary_memory_friendly
 """
 
-temp = corpora.MmCorpus('/Users/JimberXin/Documents/Github Workingspace '
-                        'Natural-Language-Programming/Gensim/FirstDict.dict')
-print type(temp)
+
+
+
+
